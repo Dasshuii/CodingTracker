@@ -31,6 +31,7 @@ namespace CodingTracker
         {
             string query = "CREATE TABLE IF NOT EXISTS coding_sessions (" +
                 "id INTEGER NOT NULL PRIMARY KEY," +
+                "date TEXT NOT NULL," +
                 "startTime TEXT NOT NULL," +
                 "endTime TEXT NOT NULL," +
                 "duration TEXT NOT NULL" +
@@ -42,11 +43,35 @@ namespace CodingTracker
             conn.Close();
         }
 
-        private List<CodingSession> LoadSessions()
+        public List<CodingSession> LoadSessions()
         {
+            SqlMapper.AddTypeHandler(new TimeSpanHandler());
             string query = "SELECT * FROM coding_sessions;";
             SqliteConnection conn = new(_connectionString);
             return [.. conn.Query<CodingSession>(query)];
+        }
+
+        public void AddSession(CodingSession session)
+        {
+            using SqliteConnection conn = new(_connectionString);
+            conn.Open();
+            string query = "INSERT INTO coding_sessions (date, startTime, endTime, duration) VALUES (@date, @startTime, @endTime, @duration);";
+            var codeSession = new { 
+                    date = session.Date.ToShortDateString(), 
+                    startTime = session.StartTime.ToString("hh\\:mm"), 
+                    endTime = session.EndTime.ToString("hh\\:mm"),
+                    duration = session.Duration.ToString("hh\\:mm"),
+            };
+            var rowsAffected = conn.Execute(query, codeSession);
+            Console.WriteLine($"{rowsAffected} row(s) inserted.");
+        }
+
+        public void DeleteSession(int id)
+        {
+            using SqliteConnection conn = new(_connectionString);
+            conn.Open();
+            string query = "DELETE FROM coding_sessions WHERE id = @id";
+            conn.Execute(query, new { id });
         }
     }
 }

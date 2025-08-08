@@ -1,6 +1,6 @@
 ﻿using CodingTracker;
+using CodingTracker.Util;
 using SQLitePCL;
-using System.Configuration;
 
 internal class Program
 {
@@ -9,6 +9,7 @@ internal class Program
         Batteries.Init();
         Database db = Database.getInstance();
         db.InitializeSchema();
-
+        UserInterface userInterface = new();
+        userInterface.MainMenu();
     }
 }

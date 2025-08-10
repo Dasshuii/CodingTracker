@@ -56,11 +56,12 @@ namespace CodingTracker
             using SqliteConnection conn = new(_connectionString);
             conn.Open();
             string query = "INSERT INTO coding_sessions (date, startTime, endTime, duration) VALUES (@date, @startTime, @endTime, @duration);";
-            var codeSession = new { 
-                    date = session.Date.ToShortDateString(), 
-                    startTime = session.StartTime.ToString("hh\\:mm"), 
-                    endTime = session.EndTime.ToString("hh\\:mm"),
-                    duration = session.Duration.ToString("hh\\:mm"),
+            var codeSession = new 
+            { 
+                date = session.Date.ToShortDateString(), 
+                startTime = session.StartTime.ToString("hh\\:mm"), 
+                endTime = session.EndTime.ToString("hh\\:mm"),
+                duration = session.Duration.ToString("hh\\:mm"),
             };
             var rowsAffected = conn.Execute(query, codeSession);
             Console.WriteLine($"{rowsAffected} row(s) inserted.");
@@ -72,6 +73,22 @@ namespace CodingTracker
             conn.Open();
             string query = "DELETE FROM coding_sessions WHERE id = @id";
             conn.Execute(query, new { id });
+        }
+
+        public void UpdateSession(CodingSession session) 
+        {
+            using SqliteConnection conn = new(_connectionString);
+            conn.Open();
+            string query = "UPDATE coding_sessions SET date = @date, startTime = @startTime, endTime = @endTime, duration = @duration WHERE id = @id";
+            var codeSession = new
+            {
+                id = session.Id,
+                date = session.Date.ToShortDateString(),
+                startTime = session.StartTime.ToString("hh\\:mm"),
+                endTime = session.EndTime.ToString("hh\\:mm"),
+                duration = session.Duration.ToString("hh\\:mm"),
+            };
+            conn.Execute(query, codeSession);
         }
     }
 }

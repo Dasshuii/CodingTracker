@@ -28,7 +28,7 @@ internal class UserInterface
                     _controller.DeleteSession();
                     break;
                 case MenuAction.UpdateSession:
-                    Console.WriteLine("Updating session.");
+                    _controller.UpdateSession();
                     break;
                 case MenuAction.ViewSessions:
                     _controller.ViewSessions();

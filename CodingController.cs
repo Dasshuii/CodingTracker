@@ -59,5 +59,35 @@ namespace CodingTracker
             Console.WriteLine("Press Any Key to Continue.");
             Console.ReadKey();
         }
+
+        public void UpdateSession()
+        {
+            ViewSessions();
+            int id = SpectreConsole.GetIntegerInput("Type session's id: ");
+            string dateFormat = "dd-MM-yy";
+            string datePrompt = $"Type the [green]date[/]. Format: [blue]{dateFormat}[/]";
+
+            string timeFormat = "hh\\:mm";
+            string startTimePrompt = $"Type the [green]start time[/]. Format [blue]{timeFormat}[/]";
+            string endTimePrompt = $"Type the [green]end time[/]. Format [blue]{timeFormat}[/]";
+
+            DateTime date = Input.GetDate(datePrompt, dateFormat);
+            TimeSpan startTime = Input.GetTime(startTimePrompt, timeFormat);
+            TimeSpan endTime = Input.GetTime(endTimePrompt, timeFormat); ;
+            while (endTime < startTime)
+            {
+                Console.WriteLine("Invalid end time. Try again.");
+                endTime = Input.GetTime(endTimePrompt, timeFormat);
+            }
+            TimeSpan duration = endTime - startTime;
+            _database.UpdateSession(new CodingSession
+            {
+                Id = id,
+                Date = date,
+                StartTime = startTime,
+                EndTime = endTime,
+                Duration = duration
+            });
+        }
     }
 }

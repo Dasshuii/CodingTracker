@@ -1,6 +1,7 @@
 ﻿using CodingTracker;
 using CodingTracker.Util;
 using SQLitePCL;
+using System.Configuration;
 
 internal class Program
 {

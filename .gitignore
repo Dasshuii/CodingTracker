@@ -1,4 +1,5 @@
 bin/
 obj/
 Properties/
+coding_tracker.db
 App.config
